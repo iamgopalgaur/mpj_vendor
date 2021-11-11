@@ -166,7 +166,7 @@ class JewelleryItemsState extends State<JewelleryItems> {
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Color(0xff757575),
+                      color: Color.fromRGBO(58, 66, 86, 1.0),
                     ),
                     child: Container(
                       decoration: const BoxDecoration(
@@ -420,15 +420,45 @@ class JewelleryItemsState extends State<JewelleryItems> {
           if (snapshot.hasData) {
             // <3> Retrieve `List<DocumentSnapshot>` from snapshot
             final List<DocumentSnapshot> documents = snapshot.data!.docs;
-            return ListView(
-                children: documents
-                    .map((doc) => Card(
-                          child: ListTile(
-                            title: Text(doc['heading']),
-                            subtitle: Text(doc['subheading']),
-                          ),
-                        ))
-                    .toList());
+            return GridView.count(
+              // Create a grid with 2 columns. If you change the scrollDirection to
+              // horizontal, this produces 2 rows.
+              crossAxisCount: 2,
+              // Generate 100 widgets that display their index in the List.
+              children: documents
+                  .map((doc) => Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(
+                              child: Image.network(
+                                'http://shop.manepally.com/images/home/category/HM-1.jpg',
+                                height: 90,
+                                width: 100,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 130,
+                                  child: ListTile(
+                                    title: Text(doc['heading']),
+                                    subtitle: Text(doc['subheading']),
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Icon(Icons.edit),
+                                    Icon(Icons.delete),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ))
+                  .toList(),
+            );
           } else if (snapshot.hasError) {
             return Text('It is an Error!');
           }
